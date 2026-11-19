@@ -149,3 +149,10 @@ add_action('acf/init', function () {
         acf_update_setting('google_api_key', GOOGLE_MAPS_API_KEY);
     }
 });
+
+/**
+ * Charge le jQuery de WordPress sur le front.
+ */
+add_action('wp_enqueue_scripts', function () {
+    wp_enqueue_script('jquery');
+});
