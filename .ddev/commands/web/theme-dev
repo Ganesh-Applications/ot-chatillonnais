@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+## Description: Lance le serveur de dev Vite du thème (npm run dev)
+## Usage: theme-dev [args...]
+## Example: "ddev theme-dev"
+
+set -euo pipefail
+
+# Dossier du thème : variable THEME_DIR, sinon premier thème contenant un vite.config.js
+THEME_DIR="${THEME_DIR:-$(dirname "$(ls -1 /var/www/html/web/app/themes/*/vite.config.js 2>/dev/null | head -n 1)")}"
+
+if [ ! -f "$THEME_DIR/vite.config.js" ]; then
+  echo "Aucun thème avec vite.config.js trouvé (définis THEME_DIR)." >&2
+  exit 1
+fi
+
+cd "$THEME_DIR"
+exec npm run dev -- "$@"
