@@ -1,62 +1,89 @@
 <?php
 
+add_action('init', 'registerCustomPostTypes');
+
 /**
- * Enregistre les post types et taxonomies décrits dans app/PostTypes/.
- *
- * - Un fichier par post type (ex. event.php) : le post type et ses taxonomies propres.
- * - shared.php : les taxonomies communes à plusieurs post types.
- *
- * Seuls les réglages qui changent sont écrits dans ces fichiers,
- * les valeurs par défaut sont définies ici.
+ * Créé les posts types et les taxonomies
  */
-
-add_action('init', 'otc_custom_post_types');
-
-function otc_custom_post_types()
+function registerCustomPostTypes()
 {
     $dir = __DIR__ . '/PostTypes';
 
-    $post_type_defaults = [
+    $postTypeDefaults = [
         'public'       => true,
         'has_archive'  => true,
         'supports'     => ['title', 'thumbnail'], //-> Sans Gutenberg
         'show_in_rest' => true,
     ];
 
-    $taxonomy_defaults = [
+    $taxonomyDefaults = [
         'public'       => true,
         'hierarchical' => false,
         'show_in_rest' => true,
     ];
 
-    //-> [nom de la taxonomie] => [réglages, post types]
-    $taxonomies = [];
+    $postTypes = [
+        'accommodation' => [
+            'label'           => 'Hébergements',
+            'menu_icon'       => 'dashicons-building',
+            'rewrite'         => ['slug' => 'accommodation'],
+            'taxonomies'      => ['category'],
+            'tourinsoft_flux' => 'https://api-v3.tourinsoft.com/api/syndications/decibelles-data.tourinsoft.com/847a060a-c359-489a-ad89-921bd3ac1ec8?format=json',
+        ]
+    ];
 
-    foreach (glob("{$dir}/*.php") as $file) {
-        if (basename($file) === 'shared.php') continue;
-
-        $config = require $file;
-
-        register_post_type($config['name'], array_merge($post_type_defaults, $config['args']));
-
-        foreach ($config['taxonomies'] ?? [] as $name => $args) {
-            $taxonomies[$name] = $args + ['post_types' => [$config['name']]];
-        }
+    foreach ($postTypes as $name => $args)
+    {
+        register_post_type($name, array_merge($postTypeDefaults, $args));
     }
 
-    $taxonomies = array_merge($taxonomies, require "{$dir}/shared.php");
+    $taxonomies = [
+        'language' => [
+            'args' => [
+                'label' => 'Langues parlées',
+                'slug' => 'languages',
+            ],
+            'post_types' => ['accommodation'],
+        ],
+        'equipment' => [
+            'args' => [
+                'label' => 'Équipements',
+                'slug' => 'equipments',
+            ],
+            'post_types' => ['accommodation'],
+        ],
+        'service' => [
+            'args' => [
+                'label' => 'Services',
+                'slug' => 'services',
+            ],
+            'post_types' => ['accommodation'],
+        ],
+        'payment_method' => [
+            'args' => [
+                'label' => 'Modes de paiement',
+                'slug' => 'payment-methods',
+            ],
+            'post_types' => ['accommodation'],
+        ],
+        'accommodation_type' => [
+            'args' => [
+                'label' => "Types d'hébergement",
+                'slug'  => 'accommodation-types',
+            ],
+            'post_types' => ['accommodation'],
+        ],
+        'accommodation_rating' => [
+            'args' => [
+                'label' => 'Classements',
+                'slug'  => 'accommodation-ratings',
+            ],
+            'post_types' => ['accommodation'],
+        ],
+    ];
 
-    //-> Les taxonomies après les post types, pour pouvoir les y rattacher
-    foreach ($taxonomies as $name => $args) {
-        $post_types = $args['post_types'];
-
-        //-> 'slug' est un raccourci pour 'rewrite' => ['slug' => …]
-        if (isset($args['slug'])) {
-            $args['rewrite'] = ['slug' => $args['slug']];
-        }
-
-        unset($args['post_types'], $args['slug']);
-
-        register_taxonomy($name, $post_types, array_merge($taxonomy_defaults, $args));
+    foreach ($taxonomies as $name => $params)
+    {
+        register_taxonomy($name, $params['post_types'], array_merge($taxonomyDefaults, $params['args']));
     }
 }

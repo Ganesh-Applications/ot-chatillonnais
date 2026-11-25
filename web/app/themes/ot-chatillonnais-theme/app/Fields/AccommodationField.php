@@ -5,17 +5,17 @@ namespace App\Fields;
 use Log1x\AcfComposer\Builder;
 use Log1x\AcfComposer\Field;
 
-class HotelField extends Field
+class AccommodationField extends Field
 {
     /**
      * The field group.
      */
     public function fields(): array
     {
-        $fields = Builder::make('hotel_field');
+        $fields = Builder::make('accommodation');
 
         $fields
-            ->setLocation('post_type', '==', 'hotel');
+            ->setLocation('post_type', '==', 'accommodation');
 
         $fields
             ->addText('name', [
@@ -28,17 +28,25 @@ class HotelField extends Field
                 'tourinsoft_path' => 'DESCRIPTIFs.0.Descriptioncommerciale',
             ])
 
-            ->addTaxonomy('hotel_type', [
+            ->addTaxonomy('category', [
+                'label' => 'Catégorie',
+                'taxonomy' => 'category',
+                'field_type' => 'select',
+                'save_terms' => 1,
+                'tourinsoft_path' => 'RUBRIQUESITE',
+            ])
+
+            ->addTaxonomy('accommodation_type', [
                 'label' => "Type d'hébergement",
-                'taxonomy' => 'hotel_type',
+                'taxonomy' => 'accommodation_type',
                 'field_type' => 'select',
                 'save_terms' => 1,
                 'load_terms' => 1,
                 'tourinsoft_path' => 'TYPEHEBERGEMENT',
             ])
-            ->addTaxonomy('hotel_rating', [
+            ->addTaxonomy('accommodation_rating', [
                 'label' => 'Classement',
-                'taxonomy' => 'hotel_rating',
+                'taxonomy' => 'accommodation_rating',
                 'field_type' => 'select',
                 'allow_null' => 1,
                 'save_terms' => 1,
