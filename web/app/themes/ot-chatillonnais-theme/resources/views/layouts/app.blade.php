@@ -18,8 +18,10 @@
 
   @include('sections.toolbar')
 
-  <main id="main" class="main">
+  <main id="main" class="main bg-bg-page">
     @yield('content')
+
+    @include('sections.footer-banner')
   </main>
 
   @include('sections.footer')
