@@ -28,8 +28,8 @@ class FooterBanner extends Composer
             'tagline' => get_field('banner_tagline', 'option') ?: '',
             'title' => get_field('banner_title', 'option') ?: '',
 
-            // TODO : URL de traitement du formulaire d'inscription à la newsletter, à brancher
-            'newsletterAction' => '#',
+            // Route Acorn : routes/web.php → NewsletterController@subscribe
+            'newsletterAction' => route('newsletter.subscribe'),
         ];
     }
 }

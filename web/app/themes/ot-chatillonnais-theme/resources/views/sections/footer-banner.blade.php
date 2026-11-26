@@ -38,12 +38,22 @@
 
       <form action="{{ $newsletterAction }}" method="post" data-newsletter-form
             class="flex items-center justify-between overflow-hidden pl-7 rounded-3xl bg-field-neutral-reverse-bg">
+
+        {{-- Honeypot --}}
+        <div aria-hidden="true" class="absolute -left-[9999px]">
+          <input name="login" type="text" autocomplete="new-login" tabindex="-1" />
+          <input name="password" type="password" autocomplete="new-password" tabindex="-1" />
+        </div>
+
+        @csrf
         <label for="footer-banner-newsletter-email" class="sr-only">{{ __('Adresse e-mail', 'ot-chatillonnais') }}</label>
+
         <input id="footer-banner-newsletter-email" type="email" name="email" required autocomplete="email"
                placeholder="{{ __('E-mail', 'ot-chatillonnais') }}"
                class="flex-1 bg-transparent font-bold text-text placeholder:text-field-neutral-reverse-text focus:outline-none">
+
         <button type="submit"
-                class="flex shrink-0 items-center justify-center size-10 p-2.5 rounded-full bg-field-neutral-reverse-icon-bg">
+                class="flex shrink-0 items-center justify-center size-10 p-2.5 rounded-full bg-field-neutral-reverse-icon-bg cursor-pointer">
           <img src="{{ Vite::asset('resources/images/icons/arrow-up-right.svg') }}" alt="" width="28" height="28">
           <span class="sr-only">{{ __('S’abonner', 'ot-chatillonnais') }}</span>
         </button>

@@ -36,6 +36,8 @@ Application::configure()
     ->withProviders([
         ThemeServiceProvider::class,
     ])
+    // Charge routes/web.php ; les URL sans route restent gérées par WordPress
+    ->withRouting(wordpress: true)
     ->boot();
 
 /*
