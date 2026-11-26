@@ -5,21 +5,21 @@ namespace App\Options;
 use Log1x\AcfComposer\Builder;
 use Log1x\AcfComposer\Options as Field;
 
-class ContactDetailsOptions extends Field
+class FooterOptions extends Field
 {
     /**
      * The option page menu name.
      *
      * @var string
      */
-    public $name = 'Coordonnées';
+    public $name = 'Pied de page';
 
     /**
      * The option page document title.
      *
      * @var string
      */
-    public $title = 'Coordonnées | Options';
+    public $title = 'Pied de page';
 
     /**
      * The option page menu position.
@@ -33,7 +33,7 @@ class ContactDetailsOptions extends Field
      */
     public function fields(): array
     {
-        $fields = Builder::make('contact_details_options');
+        $fields = Builder::make('footer_options');
 
         $fields
             ->addFlexibleContent('contacts',[
@@ -49,7 +49,16 @@ class ContactDetailsOptions extends Field
             ->addGoogleMap('address', [
                 'label' => 'Adresse',
                 'required' => true,
-            ]);
+            ])
+
+            ->addRepeater('partners', [
+                'label' => 'Partenaires',
+                'button_label' => 'Ajouter un partenaire',
+            ])
+                ->addText('name', ['label' => 'Nom'])
+                ->addImage('logo', ['label' => 'Logo'])
+            ->endRepeater();
+        ;
 
         return $fields->build();
     }
